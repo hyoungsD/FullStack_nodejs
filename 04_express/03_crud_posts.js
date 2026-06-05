@@ -27,7 +27,7 @@ app.post('/posts', (req, res) => {
     return res.status(400).json({message: 'title과 content는 필수입니다'})
   }
 
-  const post = {id: nextId++, title: title, content: content, author: authro || '익명'};
+  const post = {id: nextId++, title: title, content: content, author: author || '익명'};
   posts.push(post);
 
   res.status(201).json(post);
