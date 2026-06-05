@@ -1,0 +1,15 @@
+dotenv(환경변수)
+npm install dotenv
+
+
+winston(로깅)
+npm install winston
+
+
+npm install validator
+
+
+npm install uuid
+
+
+npm install dayjs
