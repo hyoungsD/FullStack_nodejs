@@ -1,0 +1,4 @@
+npm i better-sqlite3
+
+
+vscode 확장 : SQLite3 Editor
