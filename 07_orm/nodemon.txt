@@ -1,0 +1,9 @@
+< nodemon 사용법 >
+
+- npm i nodemon
+
+
+- package.json 에 추가
+"scripts": {
+  "dev" : "nodemon 03_board-api.js"
+},

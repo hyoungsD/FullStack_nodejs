@@ -1,0 +1,36 @@
+- controllers : 클라이언트 요청을 처리하고 응답을 반환
+- models : DB 모델(테이블)과 Sequelize 설정 관리
+- routes : URL 경로와 컨트롤러를 연결
+- services : 비즈니스 로직 및 데이터 처리 담당
+
+routes: 어디로 보낼지 결정
+controllers: 요청·응답 처리
+services: 실제 업무 로직 처리
+models: DB와 통신 담당
+
+
+사용자 요청
+  ↓
+routes
+  ↓
+controllers
+  ↓
+services
+  ↓
+models
+  ↓
+DB
+
+
+(예시: 게시글 요청이 오면..)
+GET /posts
+  ↓
+routes/postRoutes.js
+  ↓
+postController.list()
+  ↓
+postService.list()
+  ↓
+Post.findAll()
+  ↓
+DB

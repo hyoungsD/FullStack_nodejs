@@ -1,0 +1,8 @@
+npm install sequelize
+npm install sqlite3
+npm i express nodemon
+
+
+- sqlite3 : orm 도구
+- better-sqlite3 : sql을 직접 날리는 도구
+- nodemon : 코드 변경을 감지해서 서버 자동 재시작
