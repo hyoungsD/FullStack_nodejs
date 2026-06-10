@@ -196,7 +196,9 @@ dist
 # End of https://www.toptal.com/developers/gitignore/api/macos,visualstudiocode,node
 
 
-
-.db
+##
+*.db
 AzuriteConfig
 .gitignore
+upload/
+profile/
