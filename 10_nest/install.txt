@@ -1,0 +1,36 @@
+
+$ npm i -g @nestjs/cli
+
+$ nest new my-app
+npm yarn pnpm > npm 선택
+
+$ cd my-app
+$ npm run start
+
+$ npm run start:dev  => 개발용
+
+
+http://localhost:3000
+
+
+
+------
+
+nest g resource posts
+
+> REST API
+> Y
+
+==> src>post 모듈 만들어짐
+ dto
+ entities
+
+
+--------
+
+validate를 위해 라이브러리 설치
+$ npm i @nestjs/mapped-types class-validator class-transformer
+
+- @nestjs/mapped-types : DTO 상속/변형용
+- class-validator : DTO 검증용
+- class-transformer : plain object → class 변환

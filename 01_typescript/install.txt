@@ -1,0 +1,15 @@
+npm i tsx
+
+
+- 실행 -
+npx tsx 파일명
+npx tsx 01_ts.ts 
+
+
+
+
+npm i reflect-metadata
+
+* reflect-metadata
+ - 데코레이터가 생성한 메타데이터(metadata)를 저장하고 읽을 수 있게 해주는 라이브러리
+ 
