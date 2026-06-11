@@ -92,8 +92,8 @@ app.post('/login', async (req, res) => {
       .json({success: false, message: 'email 또는 password가 올바르지 않습니다.'})
   }
   // const profileImage = process.cwd()+'/profile/'+req.filename;
-  const profileImage = user.image;
-  const token = jwt.sign({id: user.id, name: user.name, email: user.email, profile: user.profile}, secret, {expiresIn: '1h'});
+  const profileImage = user.profile;
+  const token = jwt.sign({id: user.id, name: user.name, email: user.email}, secret, {expiresIn: '1h'});
   res.json({success: true, token, profileImage})
 });
 
