@@ -1,0 +1,10 @@
+
+find . -name ".git" -type d
+
+rm -rf directory/.git
+
+
+rm -rf 11_nest_prisma/my-shop.git
+
+
+git add .

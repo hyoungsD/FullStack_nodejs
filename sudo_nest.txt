@@ -1,0 +1,25 @@
+$ which nest
+=> /usr/local/bin/nest
+
+$ ls -la /\/usr/local/bin/nest
+=> lrwxr-xr-x@1 root wheel 43 (날짜) /usr/local/bin/nest -> ../lib/node_mudules/@nestjs/cli/bin/nest.js
+
+$ sudo chown -R ${whoami}:staff /usr/local/bin/nest
+$ sudo chown -R ${whoami}:staff /usr/local/lib/node_modules
+
+
+
+$ cd Downlads
+$ mkdir test
+$ cd test
+$ ls
+$ nest new my-app
+$ cd my-app
+$ ls
+$ npm install
+
+$ sudo chown -R 502:20 ~/.npm
+$ npm install
+$ cd ..
+$ nest new my-app2
+

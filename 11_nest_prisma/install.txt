@@ -1,0 +1,53 @@
+
+$ nest new my-shop
+  > npm
+$ cd my-shop
+
+$ nest g resource categories
+  > REST API
+  > Yes
+$ nest g resource products --no-spec
+
+$ npm i class-validator class-transformer dotenv
+$ npm i @prisma/client@6
+$ npm i -D prisma@6
+
+$ npx prisma init --datasource-provider sqlite
+
+
+$ npm run start:dev
+
+
+-- Prisma 스키마 변경 내용을 데이터베이스에 반영하고, 마이그레이션 파일을 생성하는 명령어
+-- init은 첫 번째 마이그레이션의 이름
+$ npx prisma migrate dev --name init
+
+-- 
+$ nest g module prisma
+$ nest g service prisma --no-spec
+
+$ npx prisma generate
+$ npx prisma studio
+
+
+
+-- tsconfil.json 파일에 추가
+"strictPropertyInitialization": false,
+
+
+-- src/main.ts
+  - import 추가
+    import 'dotenv/config';
+  - bootstrap() 안에 추가
+    app.useGlobalPipes(new ValidationPipe({whitelist: true, transform: true}));
+
+
+-- vscode Commant+Shift+P
+  TypeScript : Restart TS Server
+
+
+0. 카테고리
+1. 상품
+2. 주문
+3. 회원
+4.

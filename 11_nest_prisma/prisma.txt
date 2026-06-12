@@ -1,0 +1,306 @@
+
+$ npm i @prisma/client@6
+$ npm i -D prisma@6
+
+$ npx prisma init --datasource-provider sqlite
+
+
+
+-- Prisma 스키마 변경 내용을 데이터베이스에 반영하고, 마이그레이션 파일을 생성하는 명령어
+-- init은 첫 번째 마이그레이션의 이름
+$ npx prisma migrate dev --name init
+
+-- 
+$ nest g module prisma
+$ nest g service prisma --no-spec
+
+
+
+- schema 파일을 깨끗하게 정렬
+$ npx prisma format
+
+- client를 만들어준다
+- 모델 변경하면 실행해야 한다
+$ npx prisma generate
+  = 스키마(모델 파일)을 실제 사용할 수 있는 DB 클라이언트 코드로 바꿔줍니다
+  1.
+    model Category{
+      id Int @id
+      name String @unique
+    }
+
+  2. 
+    $ npx prims generate 를 하면
+
+  3.
+    @prisma/client에 다음과 같은 API
+    this.prisma.category.create();
+    this.prisma.category.findMany();
+
+  4. scheme.prisma : DB 구조 설계도 (사람이 작성)
+    $ npx prisma migrage : DB 테이블 실제 생성
+    $ npx prisma generate : 애플리케이션 코드에서 사용할 클라이언트 API(메소드)를 생성
+  
+  5. 만약에 모델이 추가/삭제, 필드가 추가/삭제 변경되면 반드시 npx prisma generate
+
+  6. prisma@6를 사용하기 때문에 prisma/scheme.prisma 파일
+    generator client {
+      provider = 'prisma-client-js'
+    }
+    node_modules/.prisma/client -> @prisma/client
+
+
+
+- GUI 웹 화면
+$ npx prisma studio
+
+
+
+
+Controller
+    ↓
+Service
+    ↓
+Prisma
+    ↓
+Database(MySQL, PostgreSQL 등)
+
+
+
+< PRISMA >
+1. 설치
+  $ npm install prisma --save-dev
+  $ npm install @prisma/client
+
+  (초기화)
+  $ npx prisma init
+
+  (생성)
+  prisma/
+  └── schema.prisma
+  .env
+
+
+2. 데이터베이스 연결
+  .env
+    DATABASE_URL="mysql://root:1234@localhost:3306/nestdb"
+
+
+3. 모델 작성
+  * prisma/schema.prisma
+
+  generator client {
+    provider = "prisma-client-js"
+  }
+  datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+  }
+  model Post {
+    id        Int      @id @default(autoincrement())
+    title     String
+    content   String?
+    createdAt DateTime @default(now())
+  }
+
+
+4. DB 반영
+  $ npx prisma migrate dev --name init
+
+  prisma/
+  └── migrations/
+
+  $ npx prisma migrate dev --name add_product
+  $ npx prisma migrate dev --name add_member
+
+
+
+5. Prisma Client 생성
+  (수동 생성)
+  $ npx prisma generate
+
+
+6. PrismaService 만들기
+  NestJS에서 Prisma를 DI로 사용하기 위해 서비스 생성
+  * src/prisma/prisma.service.ts
+
+  import { Injectable, OnModuleInit } from '@nestjs/common';
+  import { PrismaClient } from '@prisma/client';
+
+  @Injectable()
+  export class PrismaService
+    extends PrismaClient
+    implements OnModuleInit, OnModuleDestroy
+  {
+    async onModuleInit() {
+      await this.$connect();
+    }
+    async onModuleDestroy() {
+      await this.$disconnect();
+    }
+  }
+
+
+7. PrismaModule 만들기
+  * src/prisma/prisma.module.ts
+
+  import { Module } from '@nestjs/common';
+  import { PrismaService } from './prisma.service';
+
+  @Global()
+  @Module({
+    providers: [PrismaService],
+    exports: [PrismaService],
+  })
+  export class PrismaModule {}
+
+
+8. AppModule 등록
+  * app.module.ts
+
+  import { Module } from '@nestjs/common';
+  import { PrismaModule } from './prisma/prisma.module';
+
+  @Module({
+    imports: [PrismaModule],
+  })
+  export class AppModule {}
+
+
+9. Service에서 사용
+  * posts.service.ts
+
+  import { Injectable } from '@nestjs/common';
+  import { PrismaService } from '../prisma/prisma.service';
+
+  @Injectable()
+  export class PostsService {
+    constructor(
+      private readonly prisma: PrismaService,
+    ) {}
+
+    async findAll() {
+      return this.prisma.post.findMany();
+    }
+  }
+
+
+10. CRUD 예제
+
+ - CREATE
+  async create(title: string) {
+    return this.prisma.post.create({
+      data: {
+        title,
+      },
+    });
+  }
+
+  - READ
+  async findAll() {
+    return this.prisma.post.findMany();
+  }
+
+  - READ ONE
+  async findOne(id: number) {
+    return this.prisma.post.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
+
+  - UPDATE
+  async update(id: number, title: string) {
+    return this.prisma.post.update({
+      where: {
+        id,
+      },
+      data: {
+        title,
+      },
+    });
+  }
+
+  - DELETE
+  async remove(id: number) {
+    return this.prisma.post.delete({
+      where: {
+        id,
+      },
+    });
+  }
+
+
+11. DTO와 함께 사용
+  async create(dto: CreatePostDto) {
+    return this.prisma.post.create({
+      data: dto,
+    });
+  }
+
+  - DTO:
+  export class CreatePostDto {
+    title: string;
+    content?: string;
+  }
+
+
+12. 관계 설정
+ * schema.prisma
+  model User {
+    id    Int    @id @default(autoincrement())
+    name  String
+
+    posts Post[]
+  }
+  model Post {
+    id       Int    @id @default(autoincrement())
+    title    String
+
+    userId   Int
+    user     User @relation(fields: [userId], references: [id])
+  }
+
+
+13. 관계 조회
+  return this.prisma.user.findMany({
+    include: {
+      posts: true,
+    },
+  });
+
+
+--- NestJS + Prisma 실무 구조 ---
+src/
+├── prisma/
+│   ├── prisma.module.ts
+│   └── prisma.service.ts
+│
+├── posts/
+│   ├── dto/
+│   ├── posts.controller.ts
+│   ├── posts.service.ts
+│   └── posts.module.ts
+│
+├── users/
+│   ├── dto/
+│   ├── users.controller.ts
+│   ├── users.service.ts
+│   └── users.module.ts
+│
+├── app.module.ts
+└── main.ts
+
+prisma/
+├── schema.prisma
+└── migrations/
+
+
+
+== 핵심 흐름==
+1. schema.prisma에 모델 작성
+2. npx prisma migrate dev --name ...
+3. PrismaService 생성
+4. Service에서 DI로 주입
+
