@@ -202,3 +202,4 @@ AzuriteConfig
 .gitignore
 upload/
 profile/
+*.sql
