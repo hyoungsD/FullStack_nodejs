@@ -38,11 +38,15 @@ export class ProductsService {
     return product;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: number, updateProductDto: UpdateProductDto) {
+    await this.findOne(id); // 없으면 그냥 404
+    // UPDATE products set ... WHERE id = 3
+    return await this.prisma.product.update({where: {id}, data: updateProductDto});
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: number) {
+    await this.findOne(id);
+    await this.prisma.product.delete({where: {id}})
+    return {deleted: id};
   }
 }

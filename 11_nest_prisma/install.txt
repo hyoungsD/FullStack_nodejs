@@ -30,6 +30,15 @@ $ npx prisma generate
 $ npx prisma studio
 
 
+--
+스웨거 설치
+$ npm install @nestjs/swagger
+
+스웨거 설치시 변경할 파일
+  main.ts
+  *Controller.ts
+  *DTO.ts
+
 
 -- tsconfil.json 파일에 추가
 "strictPropertyInitialization": false,

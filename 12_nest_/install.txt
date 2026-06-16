@@ -1,0 +1,39 @@
+
+-- 프로젝트 생성
+$ nest new shop --skip-git
+
+$ cd shop
+
+-- 모듈 생성
+$ nest g resource categories --no-spec
+$ nest g resource products --no-spec
+$ nest g resource users --no-spec
+
+-- 패키지 설치
+$ npm i class-validator class-transformer dotnet
+$ npm i @prisma/client@6
+$ npm i -D prisma@6
+$ npm i @nestjs/swagger
+
+
+-- prisma generate
+$ npx prisma init
+
+
+-- scheme.prisma 정렬, 포맷팅
+$ npx prisma format
+
+
+-- db
+$ npx prisma migrate dev --name init
+$ npx prisma generate
+
+
+-- prisma service
+$ nest g module prisma
+$ nest g service prisma --no-spec
+
+
+-- tsconfig.json
+"strictPropertyInitialization": false,
+
