@@ -1,0 +1,125 @@
+
+-- 프로젝트 생성
+$ nest new shop --skip-git
+
+$ cd shop
+
+-- 모듈 생성
+$ nest g resource categories --no-spec
+$ nest g resource products --no-spec
+$ nest g resource users --no-spec
+
+-- 패키지 설치
+$ npm i class-validator class-transformer dotnet
+$ npm i @prisma/client@6
+$ npm i -D prisma@6
+$ npm i @nestjs/swagger
+
+
+-- prisma generate
+$ npx prisma init
+
+
+-- scheme.prisma 정렬, 포맷팅
+$ npx prisma format
+
+
+-- db
+$ npx prisma migrate dev --name init
+$ npx prisma generate
+
+
+-- prisma service
+$ nest g module prisma
+$ nest g service prisma --no-spec
+
+
+-- tsconfig.json
+"strictPropertyInitialization": false,
+
+
+
+# 인증
+-- 1) 관련 패키지 설치
+$ npm install @nestjs/jwt@11 @nestjs/passport@11 passport@0.7 passport-jwt@4 bcrypt@6
+$ npm install -D @types/passport-jwt@4 @types/bcrypt@6
+
+-- 2) .env JWT 시크릿 추가
+JWT_SECRET="dev-secret-change-me"
+
+-- 3) 관련 모듈 생성
+$ nest g module auth
+$ nest g service auth --no-spec
+$ nest g controller auth --no-spec
+$ nest g guard auth/guard/jwt-auth --no-spec
+
+-- 4) scheme 수정
+$ npx prisma format
+$ npx prisma migrate dev --name add-auth
+$ npx prisma generate
+
+-- seed 데이터 생성
+  - prisma/seed.ts 파일 작성
+  - package.json 파일의 scripts에 추가
+    "seed": "ts-node prisma/seed.ts"
+
+-- 5) UserService에
+-- 5.1) createUser, findByEmail 추가
+-- 5.2) UserModule UserService exports
+
+-- 6) Auth 호출
+$ cd auth
+$ mkdir dto
+  src/auth/dto 플더 안에 파일 생성
+  create login.dto.ts
+  create register.dto.ts
+
+  - src/auth/constants.ts 파일 생성  
+
+  - auth.module.ts 에서 몇가지 임포트하기
+    import { JwtModule } from '@nestjs/jwt';
+    import { jwtConstants } from './constants';
+
+    imports: [
+      UsersModule, 
+      PassportModule,
+      JwtModule.register({
+        secret: jwtConstants.secret,
+        signOptions: {expiresIn: "14d"}
+      })
+    ],
+
+  - auth.service.ts 작성
+    register, login
+
+  - auth.controller.ts 작성
+  
+
+-- 7) JWT 전략
+  - src/auth/strategies/jwt.strategy.ts 파일 생성
+
+-- 8) guard
+  - auth/guard/jwt-auth/jwt-auth.guard.ts 파일 수정
+
+-- 9) main.ts
+  - 추가(Swagger에서 로그인 인증 가능)
+    .addBearerAuth()  // 보호 라우트용 테스트 토큰 입력
+
+
+--
+-- 로그인한 유저 정보 가져오기
+ - decorator 만들기
+ - src/common/current-user.decorator.ts 생성
+
+
+
+
+# Order
+- scheme 수정 후
+$ npx prisma migrate dev --name add-order
+$ npx prisma generate
+
+- order 모듈 추가
+$ nest g resource orders --no-spec
+$ nest g resource carts --no-spec
+
