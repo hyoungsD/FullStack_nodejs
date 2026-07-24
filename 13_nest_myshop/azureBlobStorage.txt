@@ -1,0 +1,10 @@
+
+## ㄷ
+$ npm i @azure/storage-blob
+$ npm i -D @types/multer
+
+
+.env 업데이트
+AZURE_STORAGE_CONNECTION_SPRING="{엑세스키 => 연결문자열 복사}"
+AZURE_PUBLIC_CONTAINER="..."
+

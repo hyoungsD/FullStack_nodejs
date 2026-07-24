@@ -1,0 +1,48 @@
+
+## ㄷ
+$ npm i @azure/storage-blob
+$ npm i -D @types/multer
+
+
+.env 업데이트
+AZURE_STORAGE_CONNECTION_SPRING="{엑세스키 => 연결문자열 복사}"
+AZURE_PUBLIC_CONTAINER="..."
+
+
+## azure module 만들기
+$ nest g module azure --no-spec
+$ nest g service azure/azure-blob --no-spec
+
+
+## main.ts
+
+
+## upload.config.ts 
+아래 스토리지에 저장했던 부분 주석처리
+  // storage: diskStorage({
+  //   destination: UPLOAD_DIR,
+  //   filename: (_req, file, callback) => {
+  //     // 파일명을 무작위로 
+  //     const unique = randomUUID();
+  //     const ext = extname(file.originalname).toLowerCase(); // file의 origianlname 모두 소문자로
+  //     callback(null, `${unique}${ext}`)
+  //   }
+  // }),
+
+
+## products.service.ts
+
+1. constructor에 추가
+  private readonly azureBlob: AzureBlobService,
+
+2. addImage 내용 수정
+  const {blobName, url} = await this.azureBlob.uploadPublic(file, 'products');
+  const image = await this.prisma.productImage.create({
+      data: {productId, storedName: blobName}
+    });
+  return {id: image.id, url, blobName}
+
+3. azure.module.ts파일에 추가
+ @Global() 추가
+ exports: [AzureBlobService] 추가
+
